@@ -1,0 +1,25 @@
+services:
+  frontend:
+    image: ${DOCKER_IMAGE}:${IMAGE_TAG}
+    container_name: frontend-${STAGE}
+    restart: always
+    networks:
+      - web-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web-network"
+
+      # Router für Frontend (greift für alle übrigen Requests)
+      - "traefik.http.routers.frontend-${STAGE}.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.frontend-${STAGE}.entrypoints=websecure"
+      - "traefik.http.routers.frontend-${STAGE}.tls.certresolver=myresolver"
+      - "traefik.http.services.frontend-${STAGE}.loadbalancer.server.port=80"
+      
+      # Niedrigere Priorität als Backend, damit /api immer Vorrang hat:
+      - "traefik.http.routers.frontend-${STAGE}.priority=10"
+      - "traefik.http.routers.backend-${STAGE}.priority=20"
+    mem_limit: 30m
+
+networks:
+  web-network:
+    external: true
