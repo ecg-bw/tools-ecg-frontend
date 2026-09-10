@@ -7,7 +7,7 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY index.html /usr/share/nginx/html/index.html
 
 # Eigene optimierte Nginx-Konfiguration einbinden (SPA-Routing & Caching)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Port 80 im Container exponieren
 EXPOSE 80
