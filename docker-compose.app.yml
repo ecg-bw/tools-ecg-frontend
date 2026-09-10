@@ -17,7 +17,6 @@ services:
       
       # Niedrigere Priorität als Backend, damit /api immer Vorrang hat:
       - "traefik.http.routers.frontend-${STAGE}.priority=10"
-      - "traefik.http.routers.backend-${STAGE}.priority=20"
     mem_limit: 30m
 
 networks:
