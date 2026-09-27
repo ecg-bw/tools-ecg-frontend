@@ -4,7 +4,7 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # Deine index.html in das Web-Root kopieren
-COPY index.html /usr/share/nginx/html/index.html
+COPY build/ /usr/share/nginx/html/
 
 # Eigene optimierte Nginx-Konfiguration einbinden (SPA-Routing & Caching)
 # COPY nginx.conf /etc/nginx/conf.d/default.conf
