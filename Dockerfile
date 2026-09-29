@@ -1,10 +1,22 @@
+# Build-Stage
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm i
+
+RUN npm run build
+
+# Produktions-Stage
 FROM nginx:alpine
 
 # Standard-HTML-Dateien von Nginx entfernen
 RUN rm -rf /usr/share/nginx/html/*
 
 # Deine index.html in das Web-Root kopieren
-COPY build/ /usr/share/nginx/html/
+COPY --from=build /app/build /usr/share/nginx/html/
 
 # Eigene optimierte Nginx-Konfiguration einbinden (SPA-Routing & Caching)
 # COPY nginx.conf /etc/nginx/conf.d/default.conf
