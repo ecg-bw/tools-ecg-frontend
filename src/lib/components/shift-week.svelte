@@ -1,79 +1,205 @@
 <script lang="ts">
   import * as Table from "$lib/components/ui/table";
   import { Input } from "$lib/components/ui/input/index";
-  import * as Accordion from "./ui/accordion";
-  import ShiftDay from "./shift-day.svelte";
+  import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
+  import { Badge } from "$lib/components/ui/badge/index.js";
+  import ShiftDialog from "./shift-dialog.svelte";
 
   const contactInfo = "Vorname Nachname, Tel.";
-
-  import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
-
-  type Artwork = {
-    artist: string;
-    art: string;
-  };
-
-  const works: Artwork[] = [
+  const days = [
     {
-      artist: "Ornella Binni",
-      art: "https://images.unsplash.com/photo-1465869185982-5a1a7522cbcb?auto=format&fit=crop&w=300&q=80",
+      day: "Freitag",
+      date: "04.12.2026",
+      shifts: [
+        {
+          name: "Aufbau",
+          persons: [""],
+          time: "11:30-12:00 Uhr",
+          info: "Du solltest alles aufbauen.",
+        },
+        {
+          name: "1. Schicht",
+          persons: ["", "", ""],
+          time: "11:30-14:30 Uhr",
+          info: "Du bist für die 1. Schicht eingeteilt.",
+        },
+        {
+          name: "2. Schicht",
+          persons: ["", "", ""],
+          time: "14:30-17:00 Uhr",
+          info: "Du bist für die 2. Schicht eingeteilt.",
+        },
+        {
+          name: "3. Schicht",
+          persons: ["", "", ""],
+          time: "17:00-20:00 Uhr",
+          info: "Du bist für die 3. Schicht eingeteilt.",
+        },
+        {
+          name: "4. Schicht",
+          persons: ["", "", ""],
+          time: "20:00-22:30 Uhr",
+          info: "Du bist für die 4. Schicht eingeteilt.",
+        },
+        {
+          name: "Aufräumen",
+          persons: [""],
+          time: "21:30-22:30 Uhr",
+          info: "Du solltest beim Aufräumen helfen.",
+        },
+        {
+          name: "Teigbeauftragter",
+          persons: [""],
+          time: "",
+          info: "Du bist für den Teig verantwortlich.",
+        },
+      ],
     },
     {
-      artist: "Tom Byrom",
-      art: "https://images.unsplash.com/photo-1548516173-3cabfa4607e9?auto=format&fit=crop&w=300&q=80",
+      day: "Samstag",
+      date: "04.12.2026",
+      shifts: [
+        {
+          name: "Aufbau",
+          persons: [""],
+          time: "10:30-11:00 Uhr",
+          info: "Du solltest alles aufbauen.",
+        },
+        {
+          name: "1. Schicht",
+          persons: ["", "", ""],
+          time: "10:30-13:30 Uhr",
+          info: "Du bist für die 1. Schicht eingeteilt.",
+        },
+        {
+          name: "2. Schicht",
+          persons: ["", "", ""],
+          time: "13:30-16:30 Uhr",
+          info: "Du bist für die 2. Schicht eingeteilt.",
+        },
+        {
+          name: "3. Schicht",
+          persons: ["", "", ""],
+          time: "16:30-19:30 Uhr",
+          info: "Du bist für die 3. Schicht eingeteilt.",
+        },
+        {
+          name: "4. Schicht",
+          persons: ["", "", ""],
+          time: "19:30-22:30 Uhr",
+          info: "Du bist für die 4. Schicht eingeteilt.",
+        },
+        {
+          name: "Aufräumen",
+          persons: [""],
+          time: "21:30-22:30 Uhr",
+          info: "Du solltest beim Aufräumen helfen.",
+        },
+        {
+          name: "Teigbeauftragter",
+          persons: [""],
+          time: "",
+          info: "Du bist für den Teig verantwortlich.",
+        },
+      ],
     },
     {
-      artist: "Vladimir Malyavko",
-      art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
+      day: "Sonntag",
+      date: "04.12.2026",
+      shifts: [
+        {
+          name: "Aufbau",
+          persons: [""],
+          time: "10:30-11:00 Uhr",
+          info: "Du solltest alles aufbauen.",
+        },
+        {
+          name: "1. Schicht",
+          persons: ["", "", ""],
+          time: "10:30-13:30 Uhr",
+          info: "Du bist für die 1. Schicht eingeteilt.",
+        },
+        {
+          name: "2. Schicht",
+          persons: ["", "", ""],
+          time: "13:30-16:30 Uhr",
+          info: "Du bist für die 2. Schicht eingeteilt.",
+        },
+        {
+          name: "3. Schicht",
+          persons: ["", "", ""],
+          time: "16:30-19:30 Uhr",
+          info: "Du bist für die 3. Schicht eingeteilt.",
+        },
+        {
+          name: "4. Schicht",
+          persons: ["", "", ""],
+          time: "19:30-21:00 Uhr",
+          info: "Du bist für die 4. Schicht eingeteilt.",
+        },
+        {
+          name: "Aufräumen",
+          persons: [""],
+          time: "20:00-21:00 Uhr",
+          info: "Du solltest beim Aufräumen helfen.",
+        },
+        {
+          name: "Teigbeauftragter",
+          persons: [""],
+          time: "",
+          info: "Du bist für den Teig verantwortlich.",
+        },
+      ],
     },
   ];
+  const maxShiftCount = Math.max(...days.map((day) => day.shifts.length));
 </script>
-
-<!-- <Accordion.Root type="single">
-  <Accordion.Item value="item-1">
-    <Accordion.Trigger>Freitag</Accordion.Trigger>
-    <Accordion.Content>
-      <ShiftDay></ShiftDay>
-    </Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="item-2">
-    <Accordion.Trigger>Samstag</Accordion.Trigger>
-    <Accordion.Content>
-      <ShiftDay></ShiftDay>
-    </Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="item-3">
-    <Accordion.Trigger>Sonntag</Accordion.Trigger>
-    <Accordion.Content>
-
-    </Accordion.Content>
-  </Accordion.Item>
-</Accordion.Root> -->
 
 <ScrollArea
   class="rounded-md border whitespace-nowrap"
   orientation="horizontal"
 >
   <div class="flex w-max space-x-4 p-4">
-    {#each works as artwork (artwork.artist)}
-      <ShiftDay></ShiftDay>
-      <!-- <figure class="shrink-0">
-        <div class="overflow-hidden rounded-md">
-          <img
-            src={artwork.art}
-            alt="Photo by {artwork.artist}"
-            class="aspect-[3/4] h-fit w-fit object-cover"
-            width={300}
-            height={400}
-          />
-        </div>
-        <figcaption class="pt-2 text-xs text-muted-foreground">
-          Photo by
-          <span class="font-semibold text-foreground">
-            {artwork.artist}
-          </span>
-        </figcaption>
-      </figure> -->
-    {/each}
+    <Table.Root>
+      <Table.Header>
+        <Table.Row>
+          {#each days as day}
+            <Table.Head>{day.day}</Table.Head>
+            <Table.Head></Table.Head>
+          {/each}
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {#each { length: maxShiftCount } as _, shiftIndex}
+          <Table.Row>
+            {#each days as day}
+              {@const shift = day.shifts[shiftIndex]}
+
+              {#if shift}
+                <Table.Cell class="font-medium">
+                  <p class="font-bold">{shift.name}</p>
+                  <span>{shift.time}</span>
+                </Table.Cell>
+
+                <Table.Cell class="flex flex-col gap-2">
+                  {#each shift.persons as person}
+                    {#if person}
+                      <Badge>{person}</Badge>
+                    {:else}
+                      <!-- <Input type="text" placeholder={contactInfo} /> -->
+                      <ShiftDialog titel="{shift.time} ({day.date})"
+                      ></ShiftDialog>
+                    {/if}
+                  {/each}
+                </Table.Cell>
+              {:else}
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+              {/if}
+            {/each}
+          </Table.Row>
+        {/each}
+      </Table.Body>
+    </Table.Root>
   </div>
 </ScrollArea>
