@@ -18,7 +18,7 @@
         },
         {
           name: "1. Schicht",
-          persons: ["", "", ""],
+          persons: ["Paul Wennes", "Ben Müller", "Lara Larson"],
           time: "11:30-14:30 Uhr",
           info: "Du bist für die 1. Schicht eingeteilt.",
         },
@@ -165,53 +165,43 @@
   }
 </script>
 
-<ScrollArea
-  class="rounded-md border whitespace-nowrap"
-  orientation="horizontal"
->
-  <div class="flex w-max space-x-4 p-4">
-    <Table.Root>
+<div class="flex flex-wrap gap-4 justify-center">
+  {#each days as day}
+    <Table.Root class="w-fit">
       <Table.Header>
         <Table.Row>
-          {#each days as day}
-            <Table.Head>{day.day}</Table.Head>
-            <Table.Head></Table.Head>
-          {/each}
+          <Table.Head>{day.day}</Table.Head>
+          <Table.Head></Table.Head>
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {#each { length: maxShiftCount } as _, shiftIndex}
+        {#each day.shifts as shift}
           <Table.Row>
-            {#each days as day}
-              {@const shift = day.shifts[shiftIndex]}
+            {#if shift}
+              <Table.Cell>
+                <p class="font-bold">{shift.name}</p>
+                <span>{shift.time}</span>
+              </Table.Cell>
 
-              {#if shift}
-                <Table.Cell class="font-medium">
-                  <p class="font-bold">{shift.name}</p>
-                  <span>{shift.time}</span>
-                </Table.Cell>
-
-                <Table.Cell class="flex flex-col gap-2">
-                  {#each shift.persons as person}
-                    {#if person}
-                      <Badge>{person}</Badge>
-                      <!-- {:else} -->
-                      <!-- <Input type="text" placeholder={contactInfo} /> -->
-                    {/if}
-                  {/each}
-                  {#if !isShiftFull(shift.persons)}
-                    <ShiftDialog titel="{shift.time} ({day.date})"
-                    ></ShiftDialog>
+              <Table.Cell class="flex flex-col gap-2">
+                {#each shift.persons as person}
+                  {#if person}
+                    <Badge>{person}</Badge>
+                    <!-- {:else} -->
+                    <!-- <Input type="text" placeholder={contactInfo} /> -->
                   {/if}
-                </Table.Cell>
-              {:else}
-                <Table.Cell></Table.Cell>
-                <Table.Cell></Table.Cell>
-              {/if}
-            {/each}
+                {/each}
+                {#if !isShiftFull(shift.persons)}
+                  <ShiftDialog titel="{shift.time} ({day.date})"></ShiftDialog>
+                {/if}
+              </Table.Cell>
+            {:else}
+              <Table.Cell></Table.Cell>
+              <Table.Cell></Table.Cell>
+            {/if}
           </Table.Row>
         {/each}
       </Table.Body>
     </Table.Root>
-  </div>
-</ScrollArea>
+  {/each}
+</div>
