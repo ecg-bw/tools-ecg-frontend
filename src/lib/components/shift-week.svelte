@@ -153,6 +153,17 @@
     },
   ];
   const maxShiftCount = Math.max(...days.map((day) => day.shifts.length));
+
+  function isShiftFull(persons: string[]) {
+    let personCount = 0;
+    persons.forEach((person) => {
+      if (person) personCount++;
+    });
+    if (personCount == persons.length) {
+      return true;
+    }
+    return false;
+  }
 </script>
 
 <ScrollArea
@@ -185,12 +196,14 @@
                   {#each shift.persons as person}
                     {#if person}
                       <Badge>{person}</Badge>
-                    {:else}
+                      <!-- {:else} -->
                       <!-- <Input type="text" placeholder={contactInfo} /> -->
-                      <ShiftDialog titel="{shift.time} ({day.date})"
-                      ></ShiftDialog>
                     {/if}
                   {/each}
+                  {#if !isShiftFull(shift.persons)}
+                    <ShiftDialog titel="{shift.time} ({day.date})"
+                    ></ShiftDialog>
+                  {/if}
                 </Table.Cell>
               {:else}
                 <Table.Cell></Table.Cell>
