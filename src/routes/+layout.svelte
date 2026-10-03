@@ -1,5 +1,6 @@
 <script lang="ts">
   import favicon from "#lib/assets/favicon.svg";
+  import logo from "#lib/assets/Logo_Evangelische_Christusgemeinde.png";
   import "../app.css";
   import { Button } from "#lib/components/ui/button/index.js";
   import * as ButtonGroup from "#lib/components/ui/button-group/index.js";
@@ -8,6 +9,7 @@
   import { toggleMode } from "mode-watcher";
   import * as Avatar from "#lib/components/ui/avatar/index.js";
   import { page } from "$app/state";
+  import * as Field from "#lib/components/ui/field/index.js";
 
   let { children } = $props();
 
@@ -22,20 +24,17 @@
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-<header class="flex flex-row place-content-center p-5">
-  <nav class="flex place-content-center">
-    <ButtonGroup.Root aria-label="Button group">
-      {#each links as link}
-        <Button
-          variant={page.url.pathname === link.href ? "default" : "outline"}
-          aria-current={page.url.pathname === link.href ? "page" : undefined}
-        >
-          <a href={link.href}>{link.name}</a>
-        </Button>
-      {/each}
-    </ButtonGroup.Root>
-
-    <div class="flex absolute right-5 gap-2">
+<header class="flex flex-col place-content-center gap-5">
+  <div class="flex w-full items-center justify-between px-5 pt-5">
+    <div>
+      <!-- logo -->
+      <img
+        src={logo}
+        alt="Evangelische Christusgemeinde Bad Wimpfen Logo"
+        class="w-64"
+      />
+    </div>
+    <div class="flex gap-2">
       <Button onclick={toggleMode} variant="outline" size="icon">
         <SunIcon
           class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 !transition-all dark:scale-0 dark:-rotate-90"
@@ -57,6 +56,19 @@
         </Avatar.Root>
       </div>
     </div>
+  </div>
+  <Field.Separator />
+  <nav class="flex place-content-center">
+    <ButtonGroup.Root aria-label="Button group">
+      {#each links as link}
+        <Button
+          variant={page.url.pathname === link.href ? "default" : "outline"}
+          aria-current={page.url.pathname === link.href ? "page" : undefined}
+        >
+          <a href={link.href}>{link.name}</a>
+        </Button>
+      {/each}
+    </ButtonGroup.Root>
   </nav>
 </header>
 

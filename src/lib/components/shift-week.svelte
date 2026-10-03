@@ -170,7 +170,9 @@
     <Table.Root class="w-fit">
       <Table.Header>
         <Table.Row>
-          <Table.Head>{day.day}</Table.Head>
+          <Table.Head class="font-bold text-2xl">
+            {day.day}
+          </Table.Head>
           <Table.Head></Table.Head>
         </Table.Row>
       </Table.Header>

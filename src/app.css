@@ -231,3 +231,7 @@
 
 	--radius-4xl: calc(var(--radius) * 2.6);
 }
+
+/* .primary-col {
+	background-color: var(--chart-4);
+} */

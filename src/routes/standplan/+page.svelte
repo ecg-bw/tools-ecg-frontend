@@ -11,7 +11,7 @@
 </script>
 
 <div class="flex flex-col items-center gap-5">
-  <h1 class="text-center font-bold text-3xl">Standplan</h1>
+  <!-- <h1 class="text-center font-bold text-3xl">Standplan</h1> -->
   <Tabs.Root value="overview">
     <Tabs.List variant="line">
       <Tabs.Trigger value="overview">1. {week}</Tabs.Trigger>
