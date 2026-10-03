@@ -1,12 +1,12 @@
 <script lang="ts">
-  import favicon from "$lib/assets/favicon.svg";
+  import favicon from "#lib/assets/favicon.svg";
   import "../app.css";
-  import { Button } from "$lib/components/ui/button";
-  import * as ButtonGroup from "$lib/components/ui/button-group";
+  import { Button } from "#lib/components/ui/button/index.js";
+  import * as ButtonGroup from "#lib/components/ui/button-group/index.js";
   import MoonIcon from "@lucide/svelte/icons/moon";
   import SunIcon from "@lucide/svelte/icons/sun";
   import { toggleMode } from "mode-watcher";
-  import * as Avatar from "$lib/components/ui/avatar/index.js";
+  import * as Avatar from "#lib/components/ui/avatar/index.js";
   import { page } from "$app/state";
 
   let { children } = $props();

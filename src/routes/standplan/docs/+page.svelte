@@ -1,6 +1,6 @@
 <script lang="ts">
-  import * as Table from "$lib/components/ui/table/index.js";
-  import { Button } from "$lib/components/ui/button/index.js";
+  import * as Table from "#lib/components/ui/table/index.js";
+  import { Button } from "#lib/components/ui/button/index.js";
 
   const docs = [
     {

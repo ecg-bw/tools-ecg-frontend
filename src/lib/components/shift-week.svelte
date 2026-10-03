@@ -1,8 +1,7 @@
 <script lang="ts">
-  import * as Table from "$lib/components/ui/table";
-  import { Input } from "$lib/components/ui/input/index";
-  import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
-  import { Badge } from "$lib/components/ui/badge/index.js";
+  import * as Table from "#lib/components/ui/table/index.js";
+  import { ScrollArea } from "#lib/components/ui/scroll-area/index.js";
+  import { Badge } from "#lib/components/ui/badge/index.js";
   import ShiftDialog from "./shift-dialog.svelte";
 
   const contactInfo = "Vorname Nachname, Tel.";

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import * as Card from "$lib/components/ui/card/index.js";
+  import * as Card from "#lib/components/ui/card/index.js";
   import { scaleBand } from "d3-scale";
   import { BarChart } from "layerchart";
-  import * as Chart from "$lib/components/ui/chart/index.js";
+  import * as Chart from "#lib/components/ui/chart/index.js";
 
   const chartData = [
     { month: "WE1", desktop: 186, mobile: 80 },
