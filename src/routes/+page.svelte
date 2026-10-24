@@ -27,7 +27,7 @@
     <Card.Header>
       <Card.Title class="text-center">Anmelden</Card.Title>
     </Card.Header>
-    <form onsubmit={handleSubmit}>
+    <form onsubmit={handleSubmit} class="flex flex-col gap-4">
       <Card.Content>
         <div class="flex flex-col gap-6">
           <div class="grid gap-2">
