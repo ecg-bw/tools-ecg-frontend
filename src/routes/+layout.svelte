@@ -37,7 +37,7 @@
 
   const links = [
     { name: "Standplan", href: "/standplan" },
-    { name: "Statistik", href: "/standplan/statistics" },
+    // { name: "Statistik", href: "/standplan/statistics" }, // todo: implement statistics page
     { name: "Dokumente", href: "/standplan/docs" },
   ];
 </script>
