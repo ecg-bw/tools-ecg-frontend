@@ -57,7 +57,13 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Trigger type="button" class={buttonVariants({ variant: "outline" })}>
+  <Dialog.Trigger
+    type="button"
+    class={buttonVariants({
+      variant: "outline",
+      class: "w-full px-2 text-xs whitespace-normal sm:w-auto sm:whitespace-nowrap",
+    })}
+  >
     in Schicht eintragen
   </Dialog.Trigger>
   <Dialog.Content class="sm:max-w-sm">

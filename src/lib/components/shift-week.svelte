@@ -25,39 +25,67 @@
 </script>
 
 <!-- {@debug shifts} -->
-<div class="flex flex-wrap gap-4 justify-center">
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
   {#each shifts.days as day}
-    <Table.Root class="w-fit">
+    <Table.Root
+      class="table-fixed overflow-hidden rounded-2xl border border-border/75 bg-card shadow-sm"
+    >
       <Table.Header>
         <Table.Row>
-          <Table.Head class="font-bold text-2xl">
+          <Table.Head
+            colspan={2}
+            class="border-b border-border/70 bg-secondary/70 px-5 py-4 text-lg font-semibold tracking-tight text-primary"
+          >
             {day.weekday}
           </Table.Head>
-          <Table.Head></Table.Head>
         </Table.Row>
       </Table.Header>
       <Table.Body>
         {#each day.shifts as shift}
           <Table.Row>
             {#if shift}
-              <Table.Cell>
-                <p class="font-bold">{shift.title}</p>
-                <span>{shift.startTime} - {shift.endTime}</span>
+              <Table.Cell
+                class="w-[42%] whitespace-normal px-3 py-4 align-top sm:px-4"
+              >
+                <p class="break-words font-semibold leading-snug text-foreground">
+                  {shift.title}
+                </p>
+                <span
+                  class="mt-1 block text-xs tabular-nums text-muted-foreground sm:text-sm"
+                >
+                  {shift.startTime} - {shift.endTime}
+                </span>
               </Table.Cell>
 
-              <Table.Cell class="flex flex-col gap-2">
-                {#if shift.shift_assignments}
-                  {#each shift.shift_assignments as person}
-                    {#if person.name}
-                      <Badge>{person.name} ({person.phoneNumber})</Badge>
-                    {/if}
-                  {/each}
-                {/if}
+              <Table.Cell
+                class="whitespace-normal px-3 py-4 align-top sm:px-4"
+              >
+                <div class="flex flex-col items-stretch gap-1.5">
+                  {#if shift.shift_assignments}
+                    {#each shift.shift_assignments as person}
+                      {#if person.name}
+                        <Badge
+                          variant="secondary"
+                          class="h-auto w-full max-w-full flex-col items-start gap-0.5 whitespace-normal break-words rounded-lg px-2.5 py-1.5 text-left text-xs leading-snug"
+                        >
+                          <span class="font-semibold">{person.name}</span>
+                          <span
+                            class="text-[11px] font-normal tabular-nums text-muted-foreground"
+                          >
+                            {person.phoneNumber}
+                          </span>
+                        </Badge>
+                      {/if}
+                    {/each}
+                  {/if}
+                </div>
                 {#if !isShiftFull(shift.required_slots, shift.shift_assignments)}
-                  <ShiftDialog
-                    shiftId={shift.id}
-                    titel="{shift.startTime} - {shift.endTime} ({day.date})"
-                  ></ShiftDialog>
+                  <div class="mt-2">
+                    <ShiftDialog
+                      shiftId={shift.id}
+                      titel="{shift.startTime} - {shift.endTime} ({day.date})"
+                    ></ShiftDialog>
+                  </div>
                 {/if}
               </Table.Cell>
             {:else}
