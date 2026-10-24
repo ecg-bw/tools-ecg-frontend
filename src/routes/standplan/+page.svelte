@@ -5,6 +5,10 @@
   import { breakpoints } from "@sveu/browser";
   import { breakpoints_tailwind } from "#lib/utils.js";
 
+  let { data } = $props();
+
+  let shifts = $derived(data.shifts);
+
   const week = "Wochenende";
   export const breakpoint = breakpoints(breakpoints_tailwind);
   const sme = breakpoint.lte("sm");
@@ -19,7 +23,7 @@
       <Tabs.Trigger value="reports">3. {week}</Tabs.Trigger>
     </Tabs.List>
   </Tabs.Root>
-  <ShiftWeek></ShiftWeek>
+  <ShiftWeek shifts={shifts}></ShiftWeek>
 </div>
 
 <!-- <div class="flex justify-center">
