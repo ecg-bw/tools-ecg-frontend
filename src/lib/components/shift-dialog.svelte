@@ -13,23 +13,55 @@
   let name = $state("");
   let phoneNumber = $state("");
 
-  async function save() {
-    const api = new Api();
-    await api.addShiftAssignment(shiftId, name, phoneNumber);
-    await refreshAll();
-    open = false;
+  let nameError = $state("");
+  let phoneError = $state("");
+  let submitError = $state("");
+  let saving = $state(false);
+
+  const phonePattern = /^\+?[0-9\s()./-]+$/;
+
+  function validate() {
+    nameError = name.trim() ? "" : "Bitte gib deinen Namen ein.";
+
+    const digits = phoneNumber.replace(/\D/g, "");
+    if (!phoneNumber.trim()) {
+      phoneError = "Bitte gib deine Telefonnummer ein.";
+    } else if (!phonePattern.test(phoneNumber.trim())) {
+      phoneError = "Ungültige Telefonnummer.";
+    } else {
+      phoneError = "";
+    }
+
+    return !nameError && !phoneError;
+  }
+
+  async function handleSubmit(event: SubmitEvent) {
+    event.preventDefault();
+    submitError = "";
+    if (!validate()) return;
+
+    saving = true;
+    try {
+      const api = new Api();
+      await api.addShiftAssignment(shiftId, name.trim(), phoneNumber.trim());
+      await refreshAll();
+      name = "";
+      phoneNumber = "";
+      open = false;
+    } catch {
+      submitError = "Speichern fehlgeschlagen. Bitte versuche es erneut.";
+    } finally {
+      saving = false;
+    }
   }
 </script>
 
 <Dialog.Root bind:open>
-  <form>
-    <Dialog.Trigger
-      type="button"
-      class={buttonVariants({ variant: "outline" })}
-    >
-      in Schicht eintragen
-    </Dialog.Trigger>
-    <Dialog.Content class="sm:max-w-sm">
+  <Dialog.Trigger type="button" class={buttonVariants({ variant: "outline" })}>
+    in Schicht eintragen
+  </Dialog.Trigger>
+  <Dialog.Content class="sm:max-w-sm">
+    <form onsubmit={handleSubmit} novalidate class="grid gap-6">
       <Dialog.Header>
         <Dialog.Title>{titel}</Dialog.Title>
         <Dialog.Description>
@@ -37,19 +69,31 @@
         </Dialog.Description>
       </Dialog.Header>
       <Field.Group>
-        <Field.Field>
+        <Field.Field data-invalid={!!nameError}>
           <Label>Name</Label>
-          <Input name="name" bind:value={name} placeholder="Max Mustermann" />
+          <Input
+            name="name"
+            bind:value={name}
+            aria-invalid={!!nameError}
+            placeholder="Max Mustermann"
+          />
+          <Field.Error>{nameError}</Field.Error>
         </Field.Field>
-        <Field.Field>
+        <Field.Field data-invalid={!!phoneError}>
           <Label>Telefonnummer</Label>
           <Input
             name="phoneNumber"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
             bind:value={phoneNumber}
+            aria-invalid={!!phoneError}
             placeholder="+49 1554 9488567"
           />
+          <Field.Error>{phoneError}</Field.Error>
         </Field.Field>
       </Field.Group>
+      <Field.Error>{submitError}</Field.Error>
       <Dialog.Footer>
         <Dialog.Close
           type="button"
@@ -57,8 +101,8 @@
         >
           Abbrechen
         </Dialog.Close>
-        <Button onclick={save} type="submit">Speichern</Button>
+        <Button type="submit" disabled={saving}>Speichern</Button>
       </Dialog.Footer>
-    </Dialog.Content>
-  </form>
+    </form>
+  </Dialog.Content>
 </Dialog.Root>

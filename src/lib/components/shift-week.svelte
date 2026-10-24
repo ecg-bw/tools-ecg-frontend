@@ -49,9 +49,7 @@
                 {#if shift.shift_assignments}
                   {#each shift.shift_assignments as person}
                     {#if person.name}
-                      <Badge>{person.name}</Badge>
-                      <!-- {:else} -->
-                      <!-- <Input type="text" placeholder={contactInfo} /> -->
+                      <Badge>{person.name} ({person.phoneNumber})</Badge>
                     {/if}
                   {/each}
                 {/if}
