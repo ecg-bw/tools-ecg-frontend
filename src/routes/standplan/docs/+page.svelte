@@ -22,8 +22,9 @@
 
 <div class="flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <span class="h-1 w-10 rounded-full bg-destructive"></span>
-    <h1 class="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+    <h1
+      class="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+    >
       Dokumente
     </h1>
     <p class="text-sm text-muted-foreground sm:text-base">

@@ -16,13 +16,11 @@
 
 <div class="flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <span class="h-1 w-10 rounded-full bg-destructive"></span>
-    <h1 class="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-      Schichtübersicht
+    <h1
+      class="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+    >
+      Weihnachtsmarkt Standplan
     </h1>
-    <p class="text-sm text-muted-foreground sm:text-base">
-      Alle Helfer-Schichten und Zeiten auf einen Blick.
-    </p>
   </div>
   <Tabs.Root value="overview">
     <Tabs.List
@@ -48,5 +46,5 @@
       </Tabs.Trigger>
     </Tabs.List>
   </Tabs.Root>
-  <ShiftWeek shifts={shifts}></ShiftWeek>
+  <ShiftWeek {shifts}></ShiftWeek>
 </div>
