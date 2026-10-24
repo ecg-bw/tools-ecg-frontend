@@ -8,6 +8,7 @@
   import SunIcon from "@lucide/svelte/icons/sun";
   import { ModeWatcher, toggleMode } from "mode-watcher";
   import { page } from "$app/state";
+  import { goto } from "$app/navigation";
   import * as Field from "#lib/components/ui/field/index.js";
   import WaffleIcon from "#lib/components/waffle-icon.svelte";
   import { onMount } from "svelte";
@@ -15,6 +16,9 @@
 
   let { children } = $props();
   const isLoginPage = $derived(page.url.pathname === "/");
+  const authStorageKey = "isLoggedIn";
+  let authReady = $state(false);
+  let isLoggedIn = $state(false);
 
   const api = new Api();
   let waffleCount = $state<number | null>(null);
@@ -30,6 +34,26 @@
   }
 
   onMount(() => {
+    isLoggedIn = localStorage.getItem(authStorageKey) === "true";
+    authReady = true;
+  });
+
+  $effect(() => {
+    const pathname = page.url.pathname;
+    if (!authReady) return;
+
+    const storedLogin = localStorage.getItem(authStorageKey) === "true";
+    isLoggedIn = storedLogin;
+
+    if (pathname === "/" && storedLogin) {
+      void goto("/standplan");
+    } else if (pathname !== "/" && !storedLogin) {
+      void goto("/");
+    }
+  });
+
+  $effect(() => {
+    if (!authReady || !isLoggedIn) return;
     loadWaffleCount();
     const interval = setInterval(loadWaffleCount, 5000);
     return () => clearInterval(interval);
@@ -120,5 +144,7 @@
     ? "mx-auto flex min-h-svh w-full max-w-6xl flex-col items-center justify-center px-4 py-8"
     : "mx-auto flex w-full max-w-6xl flex-col px-4 py-6 sm:px-6 sm:py-8"}
 >
-  {@render children()}
+  {#if isLoginPage || (authReady && isLoggedIn)}
+    {@render children()}
+  {/if}
 </main>
