@@ -14,6 +14,7 @@
   import { Api } from "#lib/api.js";
 
   let { children } = $props();
+  const isLoginPage = $derived(page.url.pathname === "/");
 
   const api = new Api();
   let waffleCount = $state<number | null>(null);
@@ -47,7 +48,11 @@
 
 <ModeWatcher />
 
-<header class="border-b border-border/70 bg-card/90 shadow-sm">
+<header
+  class={isLoginPage
+    ? "absolute inset-x-0 top-0 z-10 border-b border-border/70 bg-card/90 shadow-sm"
+    : "border-b border-border/70 bg-card/90 shadow-sm"}
+>
   <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:px-6">
     <div class="flex w-full items-center justify-between gap-4">
       <a href="/standplan" aria-label="Zur Standplan-Startseite">
@@ -72,40 +77,48 @@
           />
           <span class="sr-only">Toggle theme</span>
         </Button>
-        <div
-          class="flex items-center gap-2 rounded-full border border-amber-300/80 bg-amber-100/80 px-3.5 py-1.5 text-amber-950 shadow-sm dark:border-amber-700/70 dark:bg-amber-950/50 dark:text-amber-200"
-          title="Waffelcount"
-        >
-          <WaffleIcon class="h-5 w-5" />
-          <span class="text-sm font-semibold tabular-nums">
-            {waffleCount === null ? "–" : waffleCount.toString()}
-          </span>
-        </div>
+        {#if !isLoginPage}
+          <div
+            class="flex items-center gap-2 rounded-full border border-amber-300/80 bg-amber-100/80 px-3.5 py-1.5 text-amber-950 shadow-sm dark:border-amber-700/70 dark:bg-amber-950/50 dark:text-amber-200"
+            title="Waffelcount"
+          >
+            <WaffleIcon class="h-5 w-5" />
+            <span class="text-sm font-semibold tabular-nums">
+              {waffleCount === null ? "–" : waffleCount.toString()}
+            </span>
+          </div>
+        {/if}
       </div>
     </div>
-    <Field.Separator class="opacity-60" />
-    <nav
-      class="flex flex-col items-center gap-3 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]"
-    >
-      <ButtonGroup.Root
-        aria-label="Hauptnavigation"
-        class="flex-wrap sm:col-start-2 sm:justify-self-center"
+    {#if !isLoginPage}
+      <Field.Separator class="opacity-60" />
+      <nav
+        class="flex flex-col items-center gap-3 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]"
       >
-        {#each links as link}
-          <Button
-            href={link.href}
-            variant={page.url.pathname === link.href ? "default" : "outline"}
-            aria-current={page.url.pathname === link.href ? "page" : undefined}
-            class="rounded-xl px-4"
-          >
-            {link.name}
-          </Button>
-        {/each}
-      </ButtonGroup.Root>
-    </nav>
+        <ButtonGroup.Root
+          aria-label="Hauptnavigation"
+          class="flex-wrap sm:col-start-2 sm:justify-self-center"
+        >
+          {#each links as link}
+            <Button
+              href={link.href}
+              variant={page.url.pathname === link.href ? "default" : "outline"}
+              aria-current={page.url.pathname === link.href ? "page" : undefined}
+              class="rounded-xl px-4"
+            >
+              {link.name}
+            </Button>
+          {/each}
+        </ButtonGroup.Root>
+      </nav>
+    {/if}
   </div>
 </header>
 
-<main class="mx-auto flex w-full max-w-6xl flex-col px-4 py-6 sm:px-6 sm:py-8">
+<main
+  class={isLoginPage
+    ? "mx-auto flex min-h-svh w-full max-w-6xl flex-col items-center justify-center px-4 py-8"
+    : "mx-auto flex w-full max-w-6xl flex-col px-4 py-6 sm:px-6 sm:py-8"}
+>
   {@render children()}
 </main>
