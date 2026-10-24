@@ -10,7 +10,7 @@
   import * as Avatar from "#lib/components/ui/avatar/index.js";
   import { page } from "$app/state";
   import * as Field from "#lib/components/ui/field/index.js";
-  import Grid3x3Icon from "@lucide/svelte/icons/grid-3x3";
+  import WaffleIcon from "#lib/components/waffle-icon.svelte";
   import { onMount } from "svelte";
   import { Api } from "#lib/api.js";
 
@@ -95,7 +95,7 @@
       class="absolute top-1/2 right-5 flex -translate-y-1/2 items-center gap-2 rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-amber-900 shadow-sm dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200"
       title="Waffelcount"
     >
-      <Grid3x3Icon class="h-4 w-4" />
+      <WaffleIcon class="h-5 w-5" />
       <span class="text-sm font-semibold tabular-nums">
         {waffleCount === null ? "–" : waffleCount.toString()}
       </span>
