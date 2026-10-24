@@ -10,8 +10,30 @@
   import * as Avatar from "#lib/components/ui/avatar/index.js";
   import { page } from "$app/state";
   import * as Field from "#lib/components/ui/field/index.js";
+  import Grid3x3Icon from "@lucide/svelte/icons/grid-3x3";
+  import { onMount } from "svelte";
+  import { Api } from "#lib/api.js";
 
   let { children } = $props();
+
+  const api = new Api();
+  let waffleCount = $state<number | null>(null);
+
+  async function loadWaffleCount() {
+    try {
+      const data = await api.getWafflCount();
+      const value = typeof data === "number" ? data : null;
+      if (typeof value === "number") waffleCount = value;
+    } catch {
+      // keep last known value
+    }
+  }
+
+  onMount(() => {
+    loadWaffleCount();
+    const interval = setInterval(loadWaffleCount, 5000);
+    return () => clearInterval(interval);
+  });
 
   const links = [
     { name: "Standplan", href: "/standplan" },
@@ -58,7 +80,7 @@
     </div>
   </div>
   <Field.Separator />
-  <nav class="flex place-content-center">
+  <nav class="relative flex place-content-center px-5">
     <ButtonGroup.Root aria-label="Button group">
       {#each links as link}
         <Button
@@ -69,6 +91,15 @@
         </Button>
       {/each}
     </ButtonGroup.Root>
+    <div
+      class="absolute top-1/2 right-5 flex -translate-y-1/2 items-center gap-2 rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-amber-900 shadow-sm dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200"
+      title="Waffelcount"
+    >
+      <Grid3x3Icon class="h-4 w-4" />
+      <span class="text-sm font-semibold tabular-nums">
+        {waffleCount === null ? "–" : waffleCount.toString()}
+      </span>
+    </div>
   </nav>
 </header>
 

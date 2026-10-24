@@ -41,4 +41,21 @@ export class Api {
 
 		return data;
 	}
+
+	async getWafflCount(){
+		// console.log('Fetching waffl count...');
+		const response = await fetch(`${this.baseUrl}/waffeln`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
+		if (!response.ok) {
+			throw new Error(`Error fetching waffl count: ${response.statusText}`);
+		}
+		const data = await response.json();
+		// console.log('Waffl count data:', data);
+
+		return data.waffelnTotal;
+	}
 }
