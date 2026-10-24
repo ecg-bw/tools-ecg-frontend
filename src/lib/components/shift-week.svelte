@@ -6,13 +6,18 @@
   let { shifts } = $props();
 
   function isShiftFull(
+    requiredPersons: number,
     persons: { id: number; name: string; phoneNumber: string }[],
   ) {
     let personCount = 0;
-    persons.forEach((person) => {
-      if (person.name) personCount++;
-    });
-    if (personCount == persons.length) {
+    if (persons == null) {
+      personCount = 0;
+    } else {
+      persons.forEach((person) => {
+        if (person.name) personCount++;
+      });
+    }
+    if (personCount == requiredPersons) {
       return true;
     }
     return false;
@@ -41,15 +46,18 @@
               </Table.Cell>
 
               <Table.Cell class="flex flex-col gap-2">
-                {#each shift.shift_assignments as person}
-                  {#if person.name}
-                    <Badge>{person.name}</Badge>
-                    <!-- {:else} -->
-                    <!-- <Input type="text" placeholder={contactInfo} /> -->
-                  {/if}
-                {/each}
-                {#if !isShiftFull(shift.shift_assignments)}
+                {#if shift.shift_assignments}
+                  {#each shift.shift_assignments as person}
+                    {#if person.name}
+                      <Badge>{person.name}</Badge>
+                      <!-- {:else} -->
+                      <!-- <Input type="text" placeholder={contactInfo} /> -->
+                    {/if}
+                  {/each}
+                {/if}
+                {#if !isShiftFull(shift.required_slots, shift.shift_assignments)}
                   <ShiftDialog
+                    shiftId={shift.id}
                     titel="{shift.startTime} - {shift.endTime} ({day.date})"
                   ></ShiftDialog>
                 {/if}

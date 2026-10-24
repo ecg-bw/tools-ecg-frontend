@@ -4,10 +4,24 @@
   import { Button, buttonVariants } from "#lib/components/ui/button/index.js";
   import { Input } from "#lib/components/ui/input/index.js";
   import { Label } from "#lib/components/ui/label/index.js";
-  let { titel } = $props();
+  import { refreshAll } from "$app/navigation";
+  import { Api } from "#lib/api.js";
+
+  let { titel, shiftId } = $props();
+  let open = $state(false);
+
+  let name = $state("");
+  let phoneNumber = $state("");
+
+  async function save() {
+    const api = new Api();
+    await api.addShiftAssignment(shiftId, name, phoneNumber);
+    await refreshAll();
+    open = false;
+  }
 </script>
 
-<Dialog.Root>
+<Dialog.Root bind:open>
   <form>
     <Dialog.Trigger
       type="button"
@@ -25,11 +39,15 @@
       <Field.Group>
         <Field.Field>
           <Label>Name</Label>
-          <Input name="name" placeholder="Max Mustermann" />
+          <Input name="name" bind:value={name} placeholder="Max Mustermann" />
         </Field.Field>
         <Field.Field>
           <Label>Telefonnummer</Label>
-          <Input name="tel" placeholder="+49 1554 9488567" />
+          <Input
+            name="phoneNumber"
+            bind:value={phoneNumber}
+            placeholder="+49 1554 9488567"
+          />
         </Field.Field>
       </Field.Group>
       <Dialog.Footer>
@@ -39,7 +57,7 @@
         >
           Abbrechen
         </Dialog.Close>
-        <Button type="submit">Speichern</Button>
+        <Button onclick={save} type="submit">Speichern</Button>
       </Dialog.Footer>
     </Dialog.Content>
   </form>
