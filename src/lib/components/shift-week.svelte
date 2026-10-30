@@ -2,27 +2,46 @@
   import * as Table from "#lib/components/ui/table/index.js";
   import { Badge } from "#lib/components/ui/badge/index.js";
   import ShiftDialog from "./shift-dialog.svelte";
-  import { convertDate, convertTime } from "#lib/utils.js";
-  import { userLanguage } from "#lib/index.js";
+  import { convertDate, convertTime, getDaysUntil } from "#lib/utils.js";
+  import { USER_LANGUAGE, CRITICAL_DAYS } from "#lib/index.js";
 
   let { weekend } = $props();
 
-  function isShiftFull(
-    requiredPersons: number,
-    persons: { id: number; name: string; phoneNumber: string }[],
+  function getAssignedCount(
+    persons:
+      | { id: number; name: string; phoneNumber: string }[]
+      | null
+      | undefined,
   ) {
-    let personCount = 0;
-    if (persons == null) {
-      personCount = 0;
-    } else {
-      persons.forEach((person) => {
-        if (person.name) personCount++;
-      });
-    }
-    if (personCount == requiredPersons) {
-      return true;
-    }
-    return false;
+    return persons?.filter((person) => person.name).length ?? 0;
+  }
+
+  function getShiftStatus(
+    shift: { required_slots: number; shift_assignments?: any[] | null } | null,
+    date: string,
+  ) {
+    if (!shift) return null;
+
+    const remainingSlots = Math.max(
+      0,
+      shift.required_slots - getAssignedCount(shift.shift_assignments),
+    );
+    const isFull = remainingSlots === 0;
+    const daysUntil = getDaysUntil(date);
+    const isCritical = !isFull && daysUntil >= 0 && daysUntil <= CRITICAL_DAYS;
+
+    const rowClass = isFull
+      ? "bg-emerald-500/5"
+      : isCritical
+        ? "bg-amber-500/10"
+        : "";
+    const infoClass = isFull
+      ? "mt-1 text-xs font-medium text-emerald-700 dark:text-emerald-400"
+      : isCritical
+        ? "mt-1 text-xs font-medium text-amber-700 dark:text-amber-400"
+        : "mt-1 text-xs text-muted-foreground";
+
+    return { remainingSlots, isFull, isCritical, rowClass, infoClass };
   }
 </script>
 
@@ -44,8 +63,9 @@
       </Table.Header>
       <Table.Body>
         {#each day.shifts as shift}
-          <Table.Row>
-            {#if shift}
+          {@const status = getShiftStatus(shift, day.date)}
+          <Table.Row class={status?.rowClass}>
+            {#if shift && status}
               <Table.Cell
                 class="w-[42%] whitespace-normal px-3 py-4 align-top sm:px-4"
               >
@@ -57,11 +77,18 @@
                 <span
                   class="mt-1 block text-xs tabular-nums text-muted-foreground sm:text-sm"
                 >
-                  {convertTime(shift.startTime, userLanguage)} - {convertTime(
+                  {convertTime(shift.startTime, USER_LANGUAGE)} - {convertTime(
                     shift.endTime,
-                    userLanguage,
+                    USER_LANGUAGE,
                   )}
                 </span>
+                <p class={status.infoClass}>
+                  {#if status.isFull}
+                    Schicht voll
+                  {:else}
+                    Noch {status.remainingSlots} Helfer benötigt
+                  {/if}
+                </p>
               </Table.Cell>
 
               <Table.Cell class="whitespace-normal px-3 py-4 align-top sm:px-4">
@@ -84,16 +111,16 @@
                     {/each}
                   {/if}
                 </div>
-                {#if !isShiftFull(shift.required_slots, shift.shift_assignments)}
+                {#if !status.isFull}
                   <div class="mt-2">
                     <ShiftDialog
                       title="{convertTime(
                         shift.startTime,
-                        userLanguage,
+                        USER_LANGUAGE,
                       )} - {convertTime(
                         shift.endTime,
-                        userLanguage,
-                      )} ({convertDate(day.date, userLanguage)})"
+                        USER_LANGUAGE,
+                      )} ({convertDate(day.date, USER_LANGUAGE)})"
                       shiftId={shift.id}
                     ></ShiftDialog>
                   </div>

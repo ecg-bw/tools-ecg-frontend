@@ -29,6 +29,19 @@ export function convertTime(time: string, locales: string) {
     minute: "2-digit",
   });
 }
+
+export function getDaysUntil(date: string) {
+    const [year, month, day] = date.slice(0, 10).split("-").map(Number);
+    const shiftDay = Date.UTC(year, month - 1, day);
+    const today = new Date();
+    const todayDay = Date.UTC(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+    );
+
+    return Math.round((shiftDay - todayDay) / 86_400_000);
+  }
 //   const sm = breakpoint.lt("sm");
 //   const sme = breakpoint.lte("sm");
 //   const md = breakpoint.bn("sm", "md");

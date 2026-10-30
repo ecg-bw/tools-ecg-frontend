@@ -1,5 +1,5 @@
 <script lang="ts">
-  import favicon from "#lib/assets/favicon.svg";
+  import favicon from "#lib/assets/favicon.ico";
   import logo from "#lib/assets/Logo_Evangelische_Christusgemeinde.png";
   import "../app.css";
   import { Button } from "#lib/components/ui/button/index.js";
