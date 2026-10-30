@@ -2,8 +2,10 @@
   import * as Table from "#lib/components/ui/table/index.js";
   import { Badge } from "#lib/components/ui/badge/index.js";
   import ShiftDialog from "./shift-dialog.svelte";
+  import { convertDate, convertTime } from "#lib/utils.js";
+  import { userLanguage } from "#lib/index.js";
 
-  let { shifts } = $props();
+  let { weekend } = $props();
 
   function isShiftFull(
     requiredPersons: number,
@@ -26,7 +28,7 @@
 
 <!-- {@debug shifts} -->
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-  {#each shifts.days as day}
+  {#each weekend.days as day}
     <Table.Root
       class="table-fixed overflow-hidden rounded-2xl border border-border/75 bg-card shadow-sm"
     >
@@ -47,19 +49,22 @@
               <Table.Cell
                 class="w-[42%] whitespace-normal px-3 py-4 align-top sm:px-4"
               >
-                <p class="break-words font-semibold leading-snug text-foreground">
+                <p
+                  class="break-words font-semibold leading-snug text-foreground"
+                >
                   {shift.title}
                 </p>
                 <span
                   class="mt-1 block text-xs tabular-nums text-muted-foreground sm:text-sm"
                 >
-                  {shift.startTime} - {shift.endTime}
+                  {convertTime(shift.startTime, userLanguage)} - {convertTime(
+                    shift.endTime,
+                    userLanguage,
+                  )}
                 </span>
               </Table.Cell>
 
-              <Table.Cell
-                class="whitespace-normal px-3 py-4 align-top sm:px-4"
-              >
+              <Table.Cell class="whitespace-normal px-3 py-4 align-top sm:px-4">
                 <div class="flex flex-col items-stretch gap-1.5">
                   {#if shift.shift_assignments}
                     {#each shift.shift_assignments as person}
@@ -82,8 +87,14 @@
                 {#if !isShiftFull(shift.required_slots, shift.shift_assignments)}
                   <div class="mt-2">
                     <ShiftDialog
+                      title="{convertTime(
+                        shift.startTime,
+                        userLanguage,
+                      )} - {convertTime(
+                        shift.endTime,
+                        userLanguage,
+                      )} ({convertDate(day.date, userLanguage)})"
                       shiftId={shift.id}
-                      titel="{shift.startTime} - {shift.endTime} ({day.date})"
                     ></ShiftDialog>
                   </div>
                 {/if}

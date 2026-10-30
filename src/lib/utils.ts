@@ -17,6 +17,18 @@ export const breakpoints_tailwind = {
     "2xl": 1536,
 };
 
+export function convertDate(date: string, locales: string){
+    const d = new Date(date);
+    return d.toLocaleDateString(locales);
+}
+
+export function convertTime(time: string, locales: string) {
+  const d = new Date(`1970-01-01T${time}`);
+  return d.toLocaleTimeString(locales, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 //   const sm = breakpoint.lt("sm");
 //   const sme = breakpoint.lte("sm");
 //   const md = breakpoint.bn("sm", "md");

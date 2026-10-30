@@ -7,7 +7,7 @@
   import { refreshAll } from "$app/navigation";
   import { Api } from "#lib/api.js";
 
-  let { titel, shiftId } = $props();
+  let { title, shiftId } = $props();
   let open = $state(false);
 
   let name = $state("");
@@ -69,7 +69,7 @@
   <Dialog.Content class="sm:max-w-sm">
     <form onsubmit={handleSubmit} novalidate class="grid gap-6">
       <Dialog.Header>
-        <Dialog.Title>{titel}</Dialog.Title>
+        <Dialog.Title>{title}</Dialog.Title>
         <Dialog.Description>
           Bitte Trage deine Kontaktdaten für die Schicht ein.
         </Dialog.Description>

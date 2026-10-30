@@ -22,29 +22,24 @@
       Weihnachtsmarkt Standplan
     </h1>
   </div>
-  <Tabs.Root value="overview">
+  <Tabs.Root value="0">
     <Tabs.List
       class="w-full justify-start gap-1 rounded-xl border border-border/70 bg-card p-1 shadow-sm sm:w-fit"
     >
-      <Tabs.Trigger
-        value="overview"
-        class="min-w-0 rounded-lg px-0.5 py-2 text-[11px] whitespace-nowrap sm:px-4 sm:text-sm"
-      >
-        1. {week}
-      </Tabs.Trigger>
-      <Tabs.Trigger
-        value="analytics"
-        class="min-w-0 rounded-lg px-0.5 py-2 text-[11px] whitespace-nowrap sm:px-4 sm:text-sm"
-      >
-        2. {week}
-      </Tabs.Trigger>
-      <Tabs.Trigger
-        value="reports"
-        class="min-w-0 rounded-lg px-0.5 py-2 text-[11px] whitespace-nowrap sm:px-4 sm:text-sm"
-      >
-        3. {week}
-      </Tabs.Trigger>
+      {#each shifts.weekends as _, i}
+        <Tabs.Trigger
+          value={String(i)}
+          class="min-w-0 rounded-lg px-0.5 py-2 text-[11px] whitespace-nowrap sm:px-4 sm:text-sm"
+        >
+          {i + 1}. {week}
+        </Tabs.Trigger>
+      {/each}
     </Tabs.List>
+
+    {#each shifts.weekends as weekend, i}
+      <Tabs.Content value={String(i)}>
+        <ShiftWeek {weekend}></ShiftWeek>
+      </Tabs.Content>
+    {/each}
   </Tabs.Root>
-  <ShiftWeek {shifts}></ShiftWeek>
 </div>
