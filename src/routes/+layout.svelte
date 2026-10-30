@@ -34,6 +34,12 @@
   }
 
   onMount(() => {
+    if ("serviceWorker" in navigator) {
+      void navigator.serviceWorker.register("/service-worker.js").catch((error: unknown) => {
+        console.error("Service Worker konnte nicht registriert werden.", error);
+      });
+    }
+
     isLoggedIn = localStorage.getItem(authStorageKey) === "true";
     authReady = true;
   });

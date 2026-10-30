@@ -48,8 +48,14 @@
       name = "";
       phoneNumber = "";
       open = false;
-    } catch {
-      submitError = "Speichern fehlgeschlagen. Bitte versuche es erneut.";
+    } catch (error) {
+      if (error instanceof Error && error.message === "OFFLINE") {
+        submitError = "Keine Internetverbindung. Die Eintragung wurde nicht gespeichert.";
+      } else if (error instanceof Error && error.message === "TIMEOUT") {
+        submitError = "Der Server antwortet nicht. Bitte prüfe deine Verbindung und versuche es erneut.";
+      } else {
+        submitError = "Speichern fehlgeschlagen. Bitte versuche es erneut.";
+      }
     } finally {
       saving = false;
     }

@@ -24,22 +24,38 @@ export class Api {
 		return data;
 	}
 
-	async addShiftAssignment(shiftId: string, name: string, phoneNumber: string){
-		console.log("Post new shift assignments")
-		const response = await fetch(`${this.baseUrl}/standplan/shifts/${shiftId}/assignments`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ name, phoneNumber }),
-		});
-		if (!response.ok) {
-			throw new Error(`Error posting shift assignments: ${response.statusText}`);
+	async addShiftAssignment(shiftId: string, name: string, phoneNumber: string) {
+		if (typeof navigator !== 'undefined' && !navigator.onLine) {
+			throw new Error('OFFLINE');
 		}
-		const data = await response.json();
-		console.log('Shift assignments response:', data);
 
-		return data;
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), 8000);
+
+		try {
+			const response = await fetch(`${this.baseUrl}/standplan/shifts/${shiftId}/assignments`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ name, phoneNumber }),
+				signal: controller.signal,
+			});
+			if (!response.ok) {
+				throw new Error(`Error posting shift assignments: ${response.statusText}`);
+			}
+			const data = await response.json();
+			console.log('Shift assignments response:', data);
+
+			return data;
+		} catch (error) {
+			if (error instanceof DOMException && error.name === 'AbortError') {
+				throw new Error('TIMEOUT');
+			}
+			throw error;
+		} finally {
+			clearTimeout(timeout);
+		}
 	}
 
 	async getWafflCount(){

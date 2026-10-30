@@ -1,0 +1,24 @@
+{
+	"name": "Tools@ECG",
+	"short_name": "Tools@ECG",
+	"description": "Tools der Evangelischen Christusgemeinde Bad Wimpfen",
+	"lang": "de",
+	"start_url": "/",
+	"display": "standalone",
+	"theme_color": "#243b68",
+	"background_color": "#faf9f5",
+	"icons": [
+		{
+			"src": "/icon-192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "/icon-512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any"
+		}
+	]
+}
