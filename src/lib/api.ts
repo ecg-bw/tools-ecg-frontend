@@ -11,6 +11,7 @@ export class Api {
 		console.log('Fetching standplan...');
 		const response = await fetcher(`${this.baseUrl}/standplan`, {
 			method: 'GET',
+			cache: 'no-store',
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -62,6 +63,7 @@ export class Api {
 		// console.log('Fetching waffl count...');
 		const response = await fetch(`${this.baseUrl}/waffeln`, {
 			method: 'GET',
+			cache: 'no-store',
 			headers: {
 				'Content-Type': 'application/json',
 			},

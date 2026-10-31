@@ -4,14 +4,44 @@
   import ShiftWeek from "#lib/components/shift-week.svelte";
   import { breakpoints } from "@sveu/browser";
   import { breakpoints_tailwind } from "#lib/utils.js";
+  import { onMount } from "svelte";
+  import { Api } from "#lib/api.js";
 
-  let { data } = $props();
+  type Shift = {
+    id: string;
+    title: string;
+    startTime: string;
+    endTime: string;
+    required_slots: number;
+    shift_assignments?: { id: number; name: string; phoneNumber: string }[] | null;
+  };
 
-  let shifts = $derived(data.shifts);
+  type Shifts = {
+    weekends: {
+      days: {
+        date: string;
+        weekday: string;
+        shifts: (Shift | null)[];
+      }[];
+    }[];
+  };
+
+  let shifts = $state<Shifts | null>(null);
+  let loadError = $state<string | null>(null);
 
   const week = "Wochenende";
   export const breakpoint = breakpoints(breakpoints_tailwind);
   const sme = breakpoint.lte("sm");
+
+  onMount(async () => {
+    try {
+      shifts = await new Api().getShifts();
+    } catch (error) {
+      loadError = error instanceof Error
+        ? error.message
+        : "Der Standplan konnte nicht geladen werden.";
+    }
+  });
 </script>
 
 <div class="flex flex-col gap-6">
@@ -22,24 +52,30 @@
       Weihnachtsmarkt Standplan
     </h1>
   </div>
-  <Tabs.Root value="0">
-    <Tabs.List
-      class="w-full justify-start gap-1 rounded-xl border border-border/70 bg-card p-1 shadow-sm sm:w-fit"
-    >
-      {#each shifts.weekends as _, i}
-        <Tabs.Trigger
-          value={String(i)}
-          class="min-w-0 rounded-lg px-0.5 py-2 text-[11px] whitespace-nowrap sm:px-4 sm:text-sm"
-        >
-          {i + 1}. {week}
-        </Tabs.Trigger>
-      {/each}
-    </Tabs.List>
+  {#if loadError}
+    <p class="text-destructive">{loadError}</p>
+  {:else if !shifts}
+    <p class="text-muted-foreground">Standplan wird geladen …</p>
+  {:else}
+    <Tabs.Root value="0">
+      <Tabs.List
+        class="w-full justify-start gap-1 rounded-xl border border-border/70 bg-card p-1 shadow-sm sm:w-fit"
+      >
+        {#each shifts.weekends as _, i}
+          <Tabs.Trigger
+            value={String(i)}
+            class="min-w-0 rounded-lg px-0.5 py-2 text-[11px] whitespace-nowrap sm:px-4 sm:text-sm"
+          >
+            {i + 1}. {week}
+          </Tabs.Trigger>
+        {/each}
+      </Tabs.List>
 
-    {#each shifts.weekends as weekend, i}
-      <Tabs.Content value={String(i)}>
-        <ShiftWeek {weekend}></ShiftWeek>
-      </Tabs.Content>
-    {/each}
-  </Tabs.Root>
+      {#each shifts.weekends as weekend, i}
+        <Tabs.Content value={String(i)}>
+          <ShiftWeek {weekend}></ShiftWeek>
+        </Tabs.Content>
+      {/each}
+    </Tabs.Root>
+  {/if}
 </div>
