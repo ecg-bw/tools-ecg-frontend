@@ -5,43 +5,16 @@
   import { breakpoints } from "@sveu/browser";
   import { breakpoints_tailwind } from "#lib/utils.js";
   import { onMount } from "svelte";
-  import { Api } from "#lib/api.js";
+  import { shiftsStore, loadShifts } from "#lib/shifts-store.svelte.js";
 
-  type Shift = {
-    id: string;
-    title: string;
-    startTime: string;
-    endTime: string;
-    required_slots: number;
-    shift_assignments?: { id: number; name: string; phoneNumber: string }[] | null;
-  };
-
-  type Shifts = {
-    weekends: {
-      days: {
-        date: string;
-        weekday: string;
-        shifts: (Shift | null)[];
-      }[];
-    }[];
-  };
-
-  let shifts = $state<Shifts | null>(null);
-  let loadError = $state<string | null>(null);
+  let shifts = $derived(shiftsStore.data);
+  let loadError = $derived(shiftsStore.error);
 
   const week = "Wochenende";
   export const breakpoint = breakpoints(breakpoints_tailwind);
   const sme = breakpoint.lte("sm");
 
-  onMount(async () => {
-    try {
-      shifts = await new Api().getShifts();
-    } catch (error) {
-      loadError = error instanceof Error
-        ? error.message
-        : "Der Standplan konnte nicht geladen werden.";
-    }
-  });
+  onMount(loadShifts);
 </script>
 
 <div class="flex flex-col gap-6">

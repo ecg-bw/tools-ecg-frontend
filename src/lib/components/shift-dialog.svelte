@@ -4,7 +4,7 @@
   import { Button, buttonVariants } from "#lib/components/ui/button/index.js";
   import { Input } from "#lib/components/ui/input/index.js";
   import { Label } from "#lib/components/ui/label/index.js";
-  import { refreshAll } from "$app/navigation";
+  import { loadShifts } from "#lib/shifts-store.svelte.js";
   import { Api } from "#lib/api.js";
 
   let { title, shiftId } = $props();
@@ -44,7 +44,7 @@
     try {
       const api = new Api();
       await api.addShiftAssignment(shiftId, name.trim(), phoneNumber.trim());
-      await refreshAll();
+      await loadShifts();
       name = "";
       phoneNumber = "";
       open = false;
