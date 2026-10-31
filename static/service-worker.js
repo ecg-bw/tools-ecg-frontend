@@ -22,28 +22,39 @@ self.addEventListener('activate', (event) => {
 	);
 });
 
+async function handleFetch(request) {
+	let response;
+
+	try {
+		response = await fetch(request);
+	} catch (error) {
+		const cachedResponse = await caches.match(request);
+		if (cachedResponse) {
+			return cachedResponse;
+		}
+		if (request.mode === 'navigate') {
+			return caches.match('/');
+		}
+		return Response.error();
+	}
+
+	if (response.ok || response.type === 'opaque') {
+		const responseToCache = response.clone();
+		try {
+			const cache = await caches.open(CACHE_NAME);
+			await cache.put(request, responseToCache);
+		} catch (error) {
+			console.error('Response could not be cached', error);
+		}
+	}
+
+	return response;
+}
+
 self.addEventListener('fetch', (event) => {
 	if (event.request.method !== 'GET') {
 		return;
 	}
 
-	event.respondWith(
-		fetch(event.request)
-			.then((response) => {
-				if (response.ok || response.type === 'opaque') {
-					const responseToCache = response.clone();
-					void caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
-				}
-				return response;
-			})
-			.catch(() =>
-				caches.match(event.request).then((cachedResponse) => {
-					if (cachedResponse) return cachedResponse;
-					if (event.request.mode === 'navigate') {
-						return caches.match('/');
-					}
-					return Response.error();
-				})
-			)
-	);
+	event.respondWith(handleFetch(event.request));
 });
