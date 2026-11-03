@@ -1,7 +1,7 @@
 
 
 export class Api {
-	private baseUrl = 'https://api.dev.myjs.org/v1';
+	private baseUrl = '/api/v1';
 
 	constructor() {
 		console.log('Api class initialized.');
