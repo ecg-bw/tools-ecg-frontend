@@ -2,7 +2,12 @@
   import * as Table from "#lib/components/ui/table/index.js";
   import { Badge } from "#lib/components/ui/badge/index.js";
   import ShiftDialog from "./shift-dialog.svelte";
-  import { convertDate, convertTime, getDaysUntil } from "#lib/utils.js";
+  import {
+    convertDate,
+    convertTime,
+    convertWeekday,
+    getDaysUntil,
+  } from "#lib/utils.js";
   import { USER_LANGUAGE, CRITICAL_DAYS } from "#lib/index.js";
 
   let { weekend } = $props();
@@ -57,7 +62,10 @@
             colspan={2}
             class="border-b border-border/70 bg-secondary/70 px-5 py-4 text-lg font-semibold tracking-tight text-primary"
           >
-            {day.weekday}
+            {convertWeekday(day.dayOfWeek, USER_LANGUAGE)}
+            <span class="ml-2 text-sm font-normal text-muted-foreground">
+              {convertDate(day.date, USER_LANGUAGE)}
+            </span>
           </Table.Head>
         </Table.Row>
       </Table.Header>

@@ -22,6 +22,11 @@ export function convertDate(date: string, locales: string){
     return d.toLocaleDateString(locales);
 }
 
+export function convertWeekday(dayOfWeek: number, locales: string) {
+  const date = new Date(Date.UTC(2023, 0, 1 + dayOfWeek));
+  return date.toLocaleDateString(locales, { weekday: "long", timeZone: "UTC" });
+}
+
 export function convertTime(time: string, locales: string) {
   const d = new Date(`1970-01-01T${time}`);
   return d.toLocaleTimeString(locales, {

@@ -13,7 +13,7 @@ export type Shifts = {
 	weekends: {
 		days: {
 			date: string;
-			weekday: string;
+			dayOfWeek: number;
 			shifts: (Shift | null)[];
 		}[];
 	}[];
