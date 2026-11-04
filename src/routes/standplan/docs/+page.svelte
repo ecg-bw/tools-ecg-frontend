@@ -5,8 +5,24 @@
   import FileTextIcon from "@lucide/svelte/icons/file-text";
   import XIcon from "@lucide/svelte/icons/x";
 
-  let { data } = $props();
-  let openDoc = $state<(typeof data.files)[number] | null>(null);
+  import { onMount } from "svelte";
+  import { Api, type StandplanFile } from "#lib/api.js";
+
+  let files = $state<StandplanFile[]>([]);
+  let loading = $state(true);
+  let error = $state(false);
+  let openDoc = $state<StandplanFile | null>(null);
+
+  onMount(async () => {
+    try {
+      files = await new Api().getFiles();
+    } catch (e) {
+      console.error(e);
+      error = true;
+    } finally {
+      loading = false;
+    }
+  });
 </script>
 
 <div class="flex flex-col gap-6">
@@ -59,12 +75,14 @@
 
     <Card.Root class="border-border/75 bg-card/90 shadow-sm">
     <Card.Content class="grid gap-3 p-3 sm:p-4">
-      {#if data.error}
+      {#if loading}
+        <p class="text-sm text-muted-foreground">Dokumente werden geladen…</p>
+      {:else if error}
         <p class="text-sm text-destructive">
           Dokumente konnten nicht geladen werden.
         </p>
       {/if}
-      {#each data.files as doc (doc.id)}
+      {#each files as doc (doc.id)}
         <div
           class="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-background/70 p-3 transition-colors hover:bg-secondary/50 sm:gap-4 sm:p-4"
         >
