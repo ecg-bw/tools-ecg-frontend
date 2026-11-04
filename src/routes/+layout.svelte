@@ -1,6 +1,7 @@
 <script lang="ts">
   import favicon from "#lib/assets/favicon.ico";
   import logo from "#lib/assets/Logo_Evangelische_Christusgemeinde.png";
+  import logoDark from "#lib/assets/Logo_Christusgemeinde_weiß.png";
   import "../app.css";
   import { Button } from "#lib/components/ui/button/index.js";
   import * as ButtonGroup from "#lib/components/ui/button-group/index.js";
@@ -89,7 +90,12 @@
         <img
           src={logo}
           alt="Evangelische Christusgemeinde Bad Wimpfen Logo"
-          class="w-48 sm:w-64"
+          class="w-48 sm:w-64 dark:hidden"
+        />
+        <img
+          src={logoDark}
+          alt="Evangelische Christusgemeinde Bad Wimpfen Logo"
+          class="hidden w-48 sm:w-64 dark:block"
         />
       </a>
       <div class="flex shrink-0 items-center gap-2">
