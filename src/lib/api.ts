@@ -1,4 +1,9 @@
-
+export interface StandplanFile {
+	id: number;
+	title: string;
+	description: string;
+	url: string;
+}
 
 export class Api {
 	private baseUrl = '/api/v1';
@@ -57,6 +62,22 @@ export class Api {
 		} finally {
 			clearTimeout(timeout);
 		}
+	}
+
+	async getFiles(fetcher: typeof fetch = fetch): Promise<StandplanFile[]> {
+		const response = await fetcher(`${this.baseUrl}/standplan/files`, {
+			method: 'GET',
+			cache: 'no-store',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
+		if (!response.ok) {
+			throw new Error(`Error fetching files: ${response.statusText}`);
+		}
+		const data = await response.json();
+
+		return data.files;
 	}
 
 	async getWafflCount(){

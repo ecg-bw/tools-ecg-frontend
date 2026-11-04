@@ -4,6 +4,11 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+	server: {
+		proxy: {
+			'/api': { target: 'https://dev.myjs.org', changeOrigin: true }
+		}
+	},
 	plugins: [
 		tailwindcss(),
 		sveltekit({

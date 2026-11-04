@@ -1,40 +1,70 @@
 <script lang="ts">
   import { Button } from "#lib/components/ui/button/index.js";
   import * as Card from "#lib/components/ui/card/index.js";
-  import DownloadIcon from "@lucide/svelte/icons/download";
+  import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
   import FileTextIcon from "@lucide/svelte/icons/file-text";
+  import XIcon from "@lucide/svelte/icons/x";
 
-  const docs = [
-    {
-      name: "Checkliste",
-      url: "",
-    },
-    {
-      name: "Kasse",
-      url: "",
-    },
-    {
-      name: "Standinfo",
-      url: "",
-    },
-  ];
+  let { data } = $props();
+  let openDoc = $state<(typeof data.files)[number] | null>(null);
 </script>
 
 <div class="flex flex-col gap-6">
-  <div class="flex flex-col gap-2">
-    <h1
-      class="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
-    >
-      Dokumente
-    </h1>
-    <p class="text-sm text-muted-foreground sm:text-base">
-      Unterlagen und Checklisten für den Stand.
-    </p>
-  </div>
+  {#if openDoc}
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center justify-between gap-2">
+        <p class="min-w-0 truncate text-lg font-semibold text-foreground">
+          {openDoc.title}
+        </p>
+        <div class="flex shrink-0 items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            class="gap-2"
+            href={openDoc.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ExternalLinkIcon class="size-4" />
+            <span class="hidden sm:inline">Neuer Tab</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            class="gap-2"
+            onclick={() => (openDoc = null)}
+          >
+            <XIcon class="size-4" />
+            Schließen
+          </Button>
+        </div>
+      </div>
+      <iframe
+        src={openDoc.url}
+        title={openDoc.title}
+        class="h-[75dvh] w-full rounded-xl border border-border/75 bg-card shadow-sm"
+      ></iframe>
+    </div>
+  {:else}
+    <div class="flex flex-col gap-2">
+      <h1
+        class="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+      >
+        Dokumente
+      </h1>
+      <p class="text-sm text-muted-foreground sm:text-base">
+        Unterlagen und Checklisten für den Stand.
+      </p>
+    </div>
 
-  <Card.Root class="border-border/75 bg-card/90 shadow-sm">
+    <Card.Root class="border-border/75 bg-card/90 shadow-sm">
     <Card.Content class="grid gap-3 p-3 sm:p-4">
-      {#each docs as doc}
+      {#if data.error}
+        <p class="text-sm text-destructive">
+          Dokumente konnten nicht geladen werden.
+        </p>
+      {/if}
+      {#each data.files as doc (doc.id)}
         <div
           class="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-background/70 p-3 transition-colors hover:bg-secondary/50 sm:gap-4 sm:p-4"
         >
@@ -45,21 +75,21 @@
               <FileTextIcon class="size-5" />
             </span>
             <div class="min-w-0">
-              <p class="truncate font-semibold text-foreground">{doc.name}</p>
-              <p class="text-xs text-muted-foreground">Stand-Unterlage</p>
+              <p class="truncate font-semibold text-foreground">{doc.title}</p>
+              <p class="text-xs text-muted-foreground">{doc.description}</p>
             </div>
           </div>
-          <a href={doc.url} class="shrink-0">
-            <Button
-              variant="outline"
-              class="gap-2 rounded-lg border-border/80 px-3"
-            >
-              <DownloadIcon class="size-4" />
-              Download
-            </Button>
-          </a>
+          <Button
+            variant="outline"
+            class="shrink-0 gap-2 rounded-lg border-border/80 px-3"
+            onclick={() => (openDoc = doc)}
+          >
+            <ExternalLinkIcon class="size-4" />
+            Öffnen
+          </Button>
         </div>
       {/each}
     </Card.Content>
-  </Card.Root>
+    </Card.Root>
+  {/if}
 </div>
