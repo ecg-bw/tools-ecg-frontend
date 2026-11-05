@@ -75,6 +75,7 @@
 
 <svelte:head>
   <link rel="icon" href={favicon} />
+  <title>ECG-Tools</title>
 </svelte:head>
 
 <ModeWatcher />
