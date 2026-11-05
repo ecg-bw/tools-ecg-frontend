@@ -17,6 +17,10 @@
   onMount(loadShifts);
 </script>
 
+<svelte:head>
+  <title>Standplan - ECG-Tools</title>
+</svelte:head>
+
 <div class="flex flex-col gap-6">
   <div class="flex flex-col gap-2">
     <h1
