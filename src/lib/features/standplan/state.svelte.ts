@@ -20,7 +20,7 @@ export class StandplanStore {
   loading = $state<boolean>(false);
   error = $state<string | null>(null);
 
-  private api = createStandplanApi({ baseUrl: "https://dev.myjs.org/api/v1" });
+  private api = createStandplanApi({ baseUrl: "/api/v1" });
 
   constructor(initial: {
     standplan: StandplanResponse;
