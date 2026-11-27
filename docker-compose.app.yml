@@ -11,8 +11,7 @@ services:
 
       # Router für Frontend (greift für alle übrigen Requests)
       - "traefik.http.routers.frontend-${STAGE}.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.frontend-${STAGE}.entrypoints=websecure"
-      - "traefik.http.routers.frontend-${STAGE}.tls.certresolver=myresolver"
+      - "traefik.http.routers.frontend-${STAGE}.entrypoints=web"
       - "traefik.http.services.frontend-${STAGE}.loadbalancer.server.port=80"
       
       # Niedrigere Priorität als Backend, damit /api immer Vorrang hat:
